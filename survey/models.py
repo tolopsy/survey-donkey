@@ -32,6 +32,7 @@ class Survey(models.Model):
 class Question(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name="questions")
     body = models.TextField()
+    help_label = models.CharField(max_length=100, blank=True, null=True) # To include hint (if necessary) on how to answer question
 
     answer_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     order = OrderField(blank=True, for_fields=['survey'])
