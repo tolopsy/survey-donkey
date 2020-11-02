@@ -19,7 +19,7 @@ class OrderField(models.PositiveIntegerField):
                 value = getattr(last_object, self.attname) + 1
 
             except ObjectDoesNotExist:
-                value = 0
+                value = 1
 
             setattr(model_instance, self.attname, value)
             return value
