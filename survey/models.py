@@ -37,6 +37,7 @@ class Question(models.Model):
 
     answer_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     order = OrderField(blank=True, for_fields=['survey'])
+    required = models.BooleanField(default=False)
 
     date_updated = models.DateTimeField(auto_now=True)
 
