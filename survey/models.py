@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.exceptions import ValidationError
 
 from .subroutines import random_id
 from .fields import OrderField
@@ -54,6 +56,15 @@ class Option(models.Model):
 
     def __str__(self):
         return self.body if(len(self.body) <= 20) else '%s...' % self.body[0:21]
+
+
+class Range(models.Model):
+    question = models.OneToOneField(Question, on_delete=models.CASCADE)
+    min_value = models.PositiveIntegerField(verbose_name="minimum value")
+    max_value = models.PositiveIntegerField(verbose_name="maximum value")
+
+    def __str__(self):
+        return "%s - %s" % (self.min_value, self.max_value)
 
 
 class Submission(models.Model):
@@ -111,7 +122,7 @@ class DateTimeAnswer(AnswerBase):
 
 
 class SelectOneAnswer(AnswerBase):
-    answer = models.OneToOneField(Option, on_delete=models.PROTECT)
+    answer = models.ForeignKey(Option, on_delete=models.PROTECT)
 
     def __str__(self):
         return '%s' % self.answer.body if(len(self.answer.body) <= 20) else '%s...' % self.answer.body[0:21]
@@ -129,3 +140,26 @@ class SelectMultipleAnswer(AnswerBase):
             display_text += "| %s " % each
 
         return display_text
+
+
+class RangeAnswer(AnswerBase):
+    range_obj = models.ForeignKey(Range, on_delete=models.PROTECT)
+    answer = models.PositiveIntegerField()
+
+    def clean(self):
+        try:
+            if (self.answer >= self.range_obj.min_value) and (self.answer <= self.range_obj.max_value):
+                super(RangeAnswer, self).clean()
+            else:
+                raise ValidationError(
+                    "Answer is not within range of %s - %s" % (self.range_obj.min_value, self.range_obj.max_value))
+
+        except ValidationError:
+            raise ValidationError(
+                "Answer is not within range of %s - %s" % (self.range_obj.min_value, self.range_obj.max_value))
+
+        except:
+            super(RangeAnswer, self).clean()
+
+    def __str__(self):
+        return "%s within %s" % (self.answer, self.range_obj)
