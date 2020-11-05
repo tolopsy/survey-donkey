@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
-from django.urls import reverse
 
 from .subroutines import random_id
 from .fields import OrderField
@@ -54,7 +53,7 @@ class Option(models.Model):
     body = models.CharField(max_length=50)
 
     def __str__(self):
-        return self.body
+        return self.body if(len(self.body) <= 20) else '%s...' % self.body[0:21]
 
 
 class Submission(models.Model):
@@ -80,7 +79,7 @@ class ShortAnswer(AnswerBase):
     answer = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.answer if (len(self.answer) <= 20) else "%s..." % self.answer[0:20]
+        return self.answer if (len(self.answer) <= 20) else "%s..." % self.answer[0:21]
 
 
 class ParagraphAnswer(AnswerBase):
@@ -110,3 +109,23 @@ class DateTimeAnswer(AnswerBase):
     def __str__(self):
         return self.answer
 
+
+class SelectOneAnswer(AnswerBase):
+    answer = models.OneToOneField(Option, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return '%s' % self.answer.body if(len(self.answer.body) <= 20) else '%s...' % self.answer.body[0:21]
+
+
+class SelectMultipleAnswer(AnswerBase):
+    answer = models.ManyToManyField(Option)
+
+    def __str__(self):
+        display_text = ""
+        for each in self.answer.all():
+            if each == self.answer.all()[0]:
+                display_text += "%s " % each
+                continue
+            display_text += "| %s " % each
+
+        return display_text
