@@ -3,8 +3,9 @@ from django.contrib.auth.admin import UserAdmin
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
-from .models import (SurveyUser, Survey, Question, Option, ShortAnswer, ParagraphAnswer,
-                     DateAnswer, TimeAnswer, DateTimeAnswer, SelectOneAnswer, SelectMultipleAnswer, Submission)
+from .models import (SurveyUser, Survey, Question, Option, Range, ShortAnswer, ParagraphAnswer,
+                     DateAnswer, TimeAnswer, DateTimeAnswer, SelectOneAnswer, SelectMultipleAnswer,
+                     RangeAnswer, Submission)
 
 
 def view_inline(obj=None):
@@ -30,9 +31,14 @@ class OptionInline(admin.TabularInline):
     extra = 0
 
 
+class RangeInline(admin.TabularInline):
+    model = Range
+    extra = 0
+
+
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
-    inlines = [OptionInline, ]
+    inlines = [OptionInline, RangeInline]
 
 
 @admin.register(SurveyUser)
@@ -54,4 +60,5 @@ admin.site.register(DateAnswer)
 admin.site.register(TimeAnswer)
 admin.site.register(SelectOneAnswer)
 admin.site.register(SelectMultipleAnswer)
+admin.site.register(RangeAnswer)
 
