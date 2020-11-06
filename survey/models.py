@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.exceptions import ValidationError
 
 from .subroutines import random_id
@@ -35,9 +34,13 @@ class Survey(models.Model):
 class Question(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name="questions")
     body = models.TextField()
-    help_label = models.CharField(max_length=100, blank=True, null=True) # To include hint (if necessary) on how to answer question
 
-    answer_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    # help_label is to include hint on how to answer question (if necessary)
+    help_label = models.CharField(max_length=100, blank=True, null=True)
+
+    answer_type = models.ForeignKey(ContentType, on_delete=models.CASCADE,
+                                    limit_choices_to={'model__contains': 'answer'})
+
     order = OrderField(blank=True, for_fields=['survey'])
     required = models.BooleanField(default=False)
 
@@ -151,15 +154,16 @@ class RangeAnswer(AnswerBase):
             if (self.answer >= self.range_obj.min_value) and (self.answer <= self.range_obj.max_value):
                 super(RangeAnswer, self).clean()
             else:
-                raise ValidationError(
-                    "Answer is not within range of %s - %s" % (self.range_obj.min_value, self.range_obj.max_value))
+                raise ValidationError("Answer is not within range of %s - %s" %
+                                      (self.range_obj.min_value, self.range_obj.max_value))
 
         except ValidationError:
             raise ValidationError(
                 "Answer is not within range of %s - %s" % (self.range_obj.min_value, self.range_obj.max_value))
-
+        '''
         except:
             super(RangeAnswer, self).clean()
+        '''
 
     def __str__(self):
         return "%s within %s" % (self.answer, self.range_obj)
