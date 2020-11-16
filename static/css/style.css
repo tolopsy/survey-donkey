@@ -1,0 +1,145 @@
+body {
+	font-family: "Mulish",sans-serif;
+	font-size: normal;
+}
+
+a {
+	text-decoration: none;
+}
+
+.header-area {
+	width: 100%;
+	height: 70px;
+	z-index: 100;
+	/*margin: 10px 0 10px 0;*/
+	border-bottom: 1px solid #d0d5d8;
+}
+
+.main-menu {
+	width: 90%
+	z-index: 100;
+	height: 50px;
+	display: flex;
+	justify-content: space-between;
+	margin: 0 auto;
+}
+
+.top-logo h1 {
+	padding: 0 0px 0px 10px;
+	margin: 10px 0 10px;
+	color: #0c52c6;
+	font-family: candara;
+}
+
+.top-mid-links{
+    margin: 10px;
+}
+
+.top-mid-links > ul > a{
+    text-decoration: none;
+    padding: 0 25px 25px 0;
+    color: #0c52c6;
+}
+
+.top-links {
+	margin: 15px 70px;
+}
+
+
+
+.btn1 {
+	width: 250px;
+	height: 50px;
+	background: #0c52c6;
+	color: #ffffff;
+	border: none;
+	font-size: 20px;
+	text-decoration: none;
+	padding: 10px 10px 10px 10px;
+	border-radius: 5px;
+	margin-left: 10px;
+	font-weight: 300;
+}
+
+
+.btn2 {
+	width: 250px;
+	height: 50px;
+	background: transparent;
+	color: #0c52c6;
+	border: 1px solid #0c52c6;
+	font-size: 20px;
+	text-decoration: none;
+	padding: 10px 10px 10px 10px;
+	border-radius: 5px;
+	margin-left: 10px;
+	font-weight: 300;
+}
+
+.btn1:hover {
+	background: transparent;
+	color: #0c52c6;
+	border: 1px solid #0c52c6;
+}
+
+.btn2:hover {
+	background: #0c52c6;
+	color: #ffffff;
+	border: none;
+}
+
+.mobile-toggle {
+	display: none;
+}
+
+.mobile-menu {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    background: linear-gradient(180deg, #0B0765 0%, #09099D 100%), #0B0765;
+    overflow-x: hidden;
+    padding-top: 90px;
+    transition: 0.5s;
+}
+
+.mobile-menu  a{
+    padding: 10px 10px 10px 20px;
+    font-size: 14px;
+    color: white;
+    display: block;
+    transition: 0.3s;
+
+}
+
+.mobile-menu .close-btn{
+	top: 20px;
+	left: 230px;
+	font-size: 45px;
+	color: #ffffff;
+	position: absolute;
+}
+
+@media only screen and (max-width:1000px){
+	.top-links {
+	margin: 0;
+	}
+
+	.top-links > a {
+		display: none;
+	} 
+
+	.top-mid-links > ul > a {
+		display: none;
+	}
+
+	.mobile-toggle {
+		display: flex;
+		margin: 15px 10px;
+	}
+}
+
+
+
